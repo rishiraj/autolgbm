@@ -11,6 +11,8 @@ NOTE: PRs are currently
 - [ ] not accepted. If there are issues/problems, please create an issue.
 - [x] accepted. If there are issues/problems, please solve with a PR.
 
+Inspired by Abhishek Thakur's AutoXGB.
+
 # Installation
 
 Install using pip
