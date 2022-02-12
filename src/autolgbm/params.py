@@ -16,15 +16,15 @@ def get_params(trial, model_config):
         'bagging_freq': trial.suggest_int('bagging_freq', 1, 7),
         'min_child_samples': trial.suggest_int('min_child_samples', 5, 100),
     }
-    if model_config.use_gpu:
-        params["tree_method"] = "gpu_hist"
-        params["gpu_id"] = 0
-        params["predictor"] = "gpu_predictor"
-    else:
-        params["tree_method"] = trial.suggest_categorical("tree_method", ["exact", "approx", "hist"])
-        params["booster"] = trial.suggest_categorical("booster", ["gbtree", "gblinear"])
-        if params["booster"] == "gbtree":
-            params["gamma"] = trial.suggest_float("gamma", 1e-8, 1.0, log=True)
-            params["grow_policy"] = trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])
+#     if model_config.use_gpu:
+#         params["tree_method"] = "gpu_hist"
+#         params["gpu_id"] = 0
+#         params["predictor"] = "gpu_predictor"
+#     else:
+#         params["tree_method"] = trial.suggest_categorical("tree_method", ["exact", "approx", "hist"])
+#         params["booster"] = trial.suggest_categorical("booster", ["gbtree", "gblinear"])
+#         if params["booster"] == "gbtree":
+#             params["gamma"] = trial.suggest_float("gamma", 1e-8, 1.0, log=True)
+#             params["grow_policy"] = trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])
 
     return params
