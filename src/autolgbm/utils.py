@@ -91,17 +91,17 @@ def fetch_lgbm_model_params(model_config):
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        metric = "logloss"
+        metric = "binary_logloss"
     elif model_config.problem_type == ProblemType.multi_class_classification:
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        metric = "mlogloss"
+        metric = "multi_logloss"
     elif model_config.problem_type == ProblemType.multi_label_classification:
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        metric = "logloss"
+        metric = "binary_logloss"
     elif model_config.problem_type == ProblemType.single_column_regression:
         lgbm_model = lgbm.LGBMRegressor
         use_predict_proba = False
