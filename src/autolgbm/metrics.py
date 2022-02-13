@@ -16,7 +16,7 @@ class Metrics:
         if self.problem_type == ProblemType.binary_classification:
             self.valid_metrics = {
                 "auc": skmetrics.roc_auc_score,
-                "logloss": skmetrics.log_loss,
+                "binary_logloss": skmetrics.log_loss,
                 "f1": skmetrics.f1_score,
                 "accuracy": skmetrics.accuracy_score,
                 "precision": skmetrics.precision_score,
@@ -24,9 +24,9 @@ class Metrics:
             }
         elif self.problem_type == ProblemType.multi_class_classification:
             self.valid_metrics = {
-                "logloss": skmetrics.log_loss,
+                "binary_logloss": skmetrics.log_loss,
                 "accuracy": skmetrics.accuracy_score,
-                "mlogloss": skmetrics.log_loss,
+                "multi_logloss": skmetrics.log_loss,
             }
         elif self.problem_type in (ProblemType.single_column_regression, ProblemType.multi_column_regression):
             self.valid_metrics = {
@@ -38,7 +38,7 @@ class Metrics:
             }
         elif self.problem_type == ProblemType.multi_label_classification:
             self.valid_metrics = {
-                "logloss": skmetrics.log_loss,
+                "binary_logloss": skmetrics.log_loss,
             }
         else:
             raise Exception("Invalid problem type")
@@ -49,7 +49,7 @@ class Metrics:
             if self.problem_type == ProblemType.binary_classification:
                 if metric_name == "auc":
                     metrics[metric_name] = metric_func(y_true, y_pred[:, 1])
-                elif metric_name == "logloss":
+                elif metric_name == "binary_logloss":
                     metrics[metric_name] = metric_func(y_true, y_pred)
                 else:
                     metrics[metric_name] = metric_func(y_true, y_pred[:, 1] >= 0.5)
