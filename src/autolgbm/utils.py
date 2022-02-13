@@ -91,38 +91,38 @@ def fetch_lgbm_model_params(model_config):
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        eval_metric = "logloss"
+        metric = "logloss"
     elif model_config.problem_type == ProblemType.multi_class_classification:
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        eval_metric = "mlogloss"
+        metric = "mlogloss"
     elif model_config.problem_type == ProblemType.multi_label_classification:
         lgbm_model = lgbm.LGBMClassifier
         use_predict_proba = True
         direction = "minimize"
-        eval_metric = "logloss"
+        metric = "logloss"
     elif model_config.problem_type == ProblemType.single_column_regression:
         lgbm_model = lgbm.LGBMRegressor
         use_predict_proba = False
         direction = "minimize"
-        eval_metric = "rmse"
+        metric = "rmse"
     elif model_config.problem_type == ProblemType.multi_column_regression:
         lgbm_model = lgbm.LGBMRegressor
         use_predict_proba = False
         direction = "minimize"
-        eval_metric = "rmse"
+        metric = "rmse"
     else:
         raise NotImplementedError
 
-    return lgbm_model, use_predict_proba, eval_metric, direction
+    return lgbm_model, use_predict_proba, metric, direction
 
 
 def optimize(
     trial,
     lgbm_model,
     use_predict_proba,
-    eval_metric,
+    metric,
     model_config,
 ):
     params = get_params(trial, model_config)
@@ -145,7 +145,7 @@ def optimize(
         # train model
         model = lgbm_model(
             random_state=model_config.seed,
-            eval_metric=eval_metric,
+            metric=metric,
             use_label_encoder=False,
             **params,
         )
@@ -190,17 +190,17 @@ def optimize(
 
     mean_metrics = dict_mean(scores)
     logger.info(f"Metrics: {mean_metrics}")
-    return mean_metrics[eval_metric]
+    return mean_metrics[metric]
 
 
 def train_model(model_config):
-    lgbm_model, use_predict_proba, eval_metric, direction = fetch_lgbm_model_params(model_config)
+    lgbm_model, use_predict_proba, metric, direction = fetch_lgbm_model_params(model_config)
 
     optimize_func = partial(
         optimize,
         lgbm_model=lgbm_model,
         use_predict_proba=use_predict_proba,
-        eval_metric=eval_metric,
+        metric=metric,
         model_config=model_config,
     )
     db_path = os.path.join(model_config.output, "params.db")
@@ -224,7 +224,7 @@ def predict_model(model_config, best_params):
         best_params["gpu_id"] = 0
         best_params["predictor"] = "gpu_predictor"
 
-    lgbm_model, use_predict_proba, eval_metric, _ = fetch_lgbm_model_params(model_config)
+    lgbm_model, use_predict_proba, metric, _ = fetch_lgbm_model_params(model_config)
 
     metrics = Metrics(model_config.problem_type)
     scores = []
@@ -254,7 +254,7 @@ def predict_model(model_config, best_params):
 
         model = lgbm_model(
             random_state=model_config.seed,
-            eval_metric=eval_metric,
+            metric=metric,
             use_label_encoder=False,
             **best_params,
         )
