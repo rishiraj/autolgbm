@@ -146,7 +146,6 @@ def optimize(
         model = lgbm_model(
             random_state=model_config.seed,
             metric=metric,
-            use_label_encoder=False,
             **params,
         )
 
@@ -255,7 +254,6 @@ def predict_model(model_config, best_params):
         model = lgbm_model(
             random_state=model_config.seed,
             metric=metric,
-            use_label_encoder=False,
             **best_params,
         )
 
